@@ -2,17 +2,26 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Admin\Concerns\StoresImages;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\SiteContentRequest;
 use App\Models\SiteSetting;
+use Illuminate\Support\Facades\Storage;
 
 class SiteContentController extends Controller
 {
+    use StoresImages;
+
     public function edit()
     {
         abort_unless(request()->user()->hasPermission('site_content.manage'), 403);
 
-        return view('admin.site-content', ['community' => SiteSetting::valueFor('community', $this->defaults())]);
+        $community = SiteSetting::valueFor('community', $this->defaults());
+
+        return view('admin.site-content', [
+            'community' => $community,
+            'heroImageUrl' => $this->imageUrl($community['profile']['hero_image_path'] ?? null),
+        ]);
     }
 
     public function update(SiteContentRequest $request)
@@ -30,7 +39,13 @@ class SiteContentController extends Controller
         foreach (['youtube', 'instagram', 'tiktok', 'facebook'] as $key) {
             $community['social_visibility'][$key] = (bool) ($values['social_visibility'][$key] ?? false);
         }
-        $community['profile'] = $values['profile'];
+        $community['profile'] = array_merge($community['profile'] ?? [], $values['profile']);
+
+        if ($request->hasFile('hero_image')) {
+            $oldPath = $community['profile']['hero_image_path'] ?? null;
+            $community['profile']['hero_image_path'] = $this->storeImage($request->file('hero_image'), 'community');
+            $this->deleteStoredImage($oldPath);
+        }
 
         SiteSetting::query()->updateOrCreate(
             ['key' => 'community'],
@@ -44,10 +59,10 @@ class SiteContentController extends Controller
     {
         return [
             'impact' => [
-                ['label' => 'Berdampak Positif ke', 'value' => 0, 'prefix' => '>', 'suffix' => '', 'unit' => 'Anak'],
-                ['label' => 'Koleksi Bacaan', 'value' => 0, 'prefix' => '±', 'suffix' => '', 'unit' => 'Buku'],
-                ['label' => 'Sukarelawan Aktif', 'value' => 0, 'prefix' => '', 'suffix' => '', 'unit' => 'Remaja'],
-                ['label' => 'Perpustakaan Desa', 'value' => 0, 'prefix' => '', 'suffix' => '', 'unit' => 'Lokasi Binaan'],
+                ['label' => 'Berdampak Positif ke', 'value' => 400, 'prefix' => '>', 'suffix' => '', 'unit' => 'Anak'],
+                ['label' => 'Koleksi Bacaan', 'value' => 500, 'prefix' => '±', 'suffix' => '', 'unit' => 'Buku'],
+                ['label' => 'Sukarelawan Aktif', 'value' => 20, 'prefix' => '', 'suffix' => '', 'unit' => 'Remaja'],
+                ['label' => 'Perpustakaan Desa', 'value' => 2, 'prefix' => '', 'suffix' => '', 'unit' => 'Lokasi Binaan'],
             ],
             'contact' => ['whatsapp' => '', 'email' => '', 'location' => ''],
             'social' => [],
@@ -57,7 +72,19 @@ class SiteContentController extends Controller
                 'home_intro' => '',
                 'about' => '',
                 'mission' => '',
+                'hero_image_path' => null,
             ],
         ];
+    }
+
+    private function imageUrl(?string $path): ?string
+    {
+        if (! $path) {
+            return null;
+        }
+
+        return str_starts_with($path, 'legacy:')
+            ? asset(substr($path, 7))
+            : Storage::disk(config('filesystems.default'))->url($path);
     }
 }

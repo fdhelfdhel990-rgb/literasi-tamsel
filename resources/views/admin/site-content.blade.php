@@ -1,8 +1,8 @@
 @extends('layouts.admin')
 @section('title', 'Identitas & Konten')
 @section('content')
-<div class="admin-heading"><div><span class="eyebrow">KONTEN WEBSITE</span><h1>Identitas &amp; Konten</h1><p>Kelola statistik beranda, profil komunitas, kontak, dan visibilitas tautan sosial.</p></div><a class="btn btn-secondary" href="{{ route('home') }}" target="_blank" rel="noopener">Lihat website ↗</a></div>
-<form class="admin-panel admin-form site-editor" action="{{ route('admin.site-content.update') }}" method="POST">
+<div class="admin-heading"><div><span class="eyebrow">KONTEN WEBSITE</span><h1>Identitas &amp; Konten</h1><p>Kelola statistik beranda, profil komunitas, kontak, dan visibilitas tautan sosial.</p></div><a class="btn btn-secondary" href="{{ route('home') }}" target="_blank" rel="noopener">Lihat website</a></div>
+<form class="admin-panel admin-form site-editor" action="{{ route('admin.site-content.update') }}" method="POST" enctype="multipart/form-data">
     @csrf
     @method('PUT')
     <section>
@@ -14,10 +14,15 @@
         </div>
     </section>
     <section>
-        <h2>Profil Komunitas</h2>
+        <h2>Profil dan Hero Homepage</h2>
         <div class="editor-grid">
             <label class="editor-wide">Nama komunitas<input name="profile[name]" value="{{ old('profile.name', $community['profile']['name'] ?? '') }}" required maxlength="255"></label>
             <label class="editor-wide">Pengantar beranda<textarea name="profile[home_intro]" rows="3" required>{{ old('profile.home_intro', $community['profile']['home_intro'] ?? '') }}</textarea></label>
+            <label class="editor-wide">Gambar hero Homepage<input type="file" name="hero_image" accept="image/jpeg,image/png,image/webp" data-image-input></label>
+            <div class="editor-wide image-preview-wrap" @if(empty($heroImageUrl)) hidden @endif>
+                <span class="input-label">Preview gambar hero saat ini / pilihan</span>
+                <img class="admin-image-preview" data-image-preview src="{{ $heroImageUrl ?? '' }}" alt="Preview gambar hero">
+            </div>
             <label class="editor-wide">Tentang komunitas<textarea name="profile[about]" rows="4" required>{{ old('profile.about', $community['profile']['about'] ?? '') }}</textarea></label>
             <label class="editor-wide">Misi<textarea name="profile[mission]" rows="3" required>{{ old('profile.mission', $community['profile']['mission'] ?? '') }}</textarea></label>
         </div>
@@ -43,6 +48,7 @@
             @endforeach
         </div>
     </section>
+    @if($errors->any())<p class="login-error" role="alert">{{ $errors->first() }}</p>@endif
     <div class="editor-actions"><button class="btn btn-primary" type="submit">Simpan perubahan</button></div>
 </form>
 @endsection

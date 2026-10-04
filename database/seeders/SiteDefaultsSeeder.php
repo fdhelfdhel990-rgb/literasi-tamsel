@@ -10,14 +10,16 @@ class SiteDefaultsSeeder extends Seeder
 {
     public function run(): void
     {
-        SiteSetting::query()->firstOrCreate(['key' => 'community'], [
+        $defaultImpact = [
+            ['label' => 'Berdampak Positif ke', 'value' => 400, 'prefix' => '>', 'suffix' => '', 'unit' => 'Anak'],
+            ['label' => 'Koleksi Bacaan', 'value' => 500, 'prefix' => '±', 'suffix' => '', 'unit' => 'Buku'],
+            ['label' => 'Sukarelawan Aktif', 'value' => 20, 'prefix' => '', 'suffix' => '', 'unit' => 'Remaja'],
+            ['label' => 'Perpustakaan Desa', 'value' => 2, 'prefix' => '', 'suffix' => '', 'unit' => 'Lokasi Binaan'],
+        ];
+
+        $setting = SiteSetting::query()->firstOrCreate(['key' => 'community'], [
             'value' => [
-                'impact' => [
-                    ['label' => 'Berdampak Positif ke', 'value' => 0, 'prefix' => '>', 'suffix' => '', 'unit' => 'Anak'],
-                    ['label' => 'Koleksi Bacaan', 'value' => 0, 'prefix' => '±', 'suffix' => '', 'unit' => 'Buku'],
-                    ['label' => 'Sukarelawan Aktif', 'value' => 0, 'prefix' => '', 'suffix' => '', 'unit' => 'Remaja'],
-                    ['label' => 'Perpustakaan Desa', 'value' => 0, 'prefix' => '', 'suffix' => '', 'unit' => 'Lokasi Binaan'],
-                ],
+                'impact' => $defaultImpact,
                 'contact' => [
                     'whatsapp' => '',
                     'email' => '',
@@ -33,6 +35,13 @@ class SiteDefaultsSeeder extends Seeder
                 ],
             ],
         ]);
+
+        $community = $setting->value ?? [];
+        $impact = $community['impact'] ?? [];
+        if (count($impact) === 4 && collect($impact)->every(fn ($metric) => (int) ($metric['value'] ?? 0) === 0)) {
+            $community['impact'] = $defaultImpact;
+            $setting->update(['value' => $community]);
+        }
 
         $cards = [
             ['key' => 'volunteer', 'title' => 'Ikut Volunteer', 'description' => 'Bergabung sebagai pendamping membaca dan penggerak kegiatan komunitas.', 'button_label' => 'Daftar sebagai volunteer'],

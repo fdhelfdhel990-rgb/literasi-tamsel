@@ -8,6 +8,7 @@ use App\Models\MediaPartner;
 use App\Models\Publication;
 use App\Models\SiteSetting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PublicSiteController extends Controller
 {
@@ -91,12 +92,21 @@ class PublicSiteController extends Controller
 
     private function community(): array
     {
-        return SiteSetting::valueFor('community', [
+        $community = SiteSetting::valueFor('community', [
             'impact' => [],
             'contact' => ['whatsapp' => '', 'email' => '', 'location' => ''],
             'social' => [],
             'social_visibility' => [],
             'profile' => ['name' => 'Komunitas Literasi Remaja Tambun Selatan', 'home_intro' => '', 'about' => '', 'mission' => ''],
         ]);
+
+        $path = $community['profile']['hero_image_path'] ?? null;
+        if ($path) {
+            $community['profile']['hero_image_url'] = str_starts_with($path, 'legacy:')
+                ? asset(substr($path, 7))
+                : Storage::disk(config('filesystems.default'))->url($path);
+        }
+
+        return $community;
     }
 }

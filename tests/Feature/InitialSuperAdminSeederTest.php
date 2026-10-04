@@ -27,9 +27,10 @@ class InitialSuperAdminSeederTest extends TestCase
         $account = User::query()->where('email', $email)->firstOrFail();
         $firstHash = $account->password;
         $this->assertSame(User::ROLE_SUPER_ADMIN, $account->role);
+        $this->assertNotEmpty($account->username);
         $this->assertTrue(Hash::check($password, $account->password));
         $this->post(route('admin.login.store'), [
-            'email' => $email,
+            'identifier' => $email,
             'password' => $password,
         ])->assertRedirect(route('admin.dashboard'));
         $this->assertAuthenticatedAs($account);

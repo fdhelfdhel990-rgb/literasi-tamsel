@@ -32,8 +32,8 @@
                 @endif
                 <form action="{{ route('admin.login.store') }}" method="POST">
                     @csrf
-                    <label for="email">Email
-                        <input id="email" name="email" type="email" value="{{ old('email') }}" autocomplete="username" required autofocus>
+                    <label for="identifier">Username atau Email
+                        <input id="identifier" name="identifier" type="text" value="{{ old('identifier') }}" autocomplete="username" required autofocus>
                     </label>
                     <label for="password">Kata sandi
                         <input id="password" name="password" type="password" autocomplete="current-password" required>

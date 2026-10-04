@@ -23,7 +23,7 @@ class User extends Authenticatable
         'join_cards.manage',
     ];
 
-    protected $fillable = ['name', 'email', 'password', 'role', 'permissions', 'is_active'];
+    protected $fillable = ['name', 'email', 'username', 'password', 'role', 'permissions', 'is_active'];
 
     protected $hidden = ['password', 'remember_token'];
 

@@ -38,10 +38,40 @@ class CommunityContentTest extends TestCase
 
         $community = SiteSetting::valueFor('community');
         $this->assertCount(4, $community['impact']);
-        $this->assertSame([0, 0, 0, 0], array_column($community['impact'], 'value'));
+        $this->assertSame([400, 500, 20, 2], array_column($community['impact'], 'value'));
         $this->assertCount(3, JoinCard::query()->get());
         $this->assertSame(0, JoinCard::query()->where('is_open', true)->count());
+        $this->get('/')->assertOk()->assertSee('data-count="400"', false)->assertSee('data-count="500"', false);
         $this->get('/join-us')->assertOk()->assertSee('Ikut Volunteer')->assertSee('Pendaftaran belum dibuka.');
+    }
+
+    public function test_default_seeder_updates_only_all_zero_statistics(): void
+    {
+        SiteSetting::query()->create([
+            'key' => 'community',
+            'value' => [
+                'impact' => [
+                    ['label' => 'Berdampak Positif ke', 'value' => 0, 'prefix' => '>', 'suffix' => '', 'unit' => 'Anak'],
+                    ['label' => 'Koleksi Bacaan', 'value' => 0, 'prefix' => '±', 'suffix' => '', 'unit' => 'Buku'],
+                    ['label' => 'Sukarelawan Aktif', 'value' => 0, 'prefix' => '', 'suffix' => '', 'unit' => 'Remaja'],
+                    ['label' => 'Perpustakaan Desa', 'value' => 0, 'prefix' => '', 'suffix' => '', 'unit' => 'Lokasi Binaan'],
+                ],
+                'contact' => ['whatsapp' => '', 'email' => '', 'location' => ''],
+                'social' => [],
+                'social_visibility' => [],
+                'profile' => ['name' => 'Komunitas Literasi Remaja Tambun Selatan', 'home_intro' => '', 'about' => '', 'mission' => ''],
+            ],
+        ]);
+
+        $this->seed(SiteDefaultsSeeder::class);
+        $this->assertSame([400, 500, 20, 2], array_column(SiteSetting::valueFor('community')['impact'], 'value'));
+
+        $community = SiteSetting::valueFor('community');
+        $community['impact'][0]['value'] = 999;
+        SiteSetting::query()->where('key', 'community')->update(['value' => $community]);
+
+        $this->seed(SiteDefaultsSeeder::class);
+        $this->assertSame(999, SiteSetting::valueFor('community')['impact'][0]['value']);
     }
 
     public function test_statistics_profile_contact_and_social_visibility_update_public_home_and_footer(): void

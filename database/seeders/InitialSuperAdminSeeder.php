@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use RuntimeException;
 
 class InitialSuperAdminSeeder extends Seeder
@@ -33,9 +34,18 @@ class InitialSuperAdminSeeder extends Seeder
                 return;
             }
 
+            $baseUsername = Str::slug(Str::before($email, '@'), '_') ?: 'super_admin';
+            $username = $baseUsername;
+            $suffix = 1;
+            while (User::query()->where('username', $username)->exists()) {
+                $tail = '_'.$suffix++;
+                $username = Str::limit($baseUsername, 80 - strlen($tail), '').$tail;
+            }
+
             User::query()->create([
                 'name' => $name,
                 'email' => $email,
+                'username' => $username,
                 'password' => Hash::make($password),
                 'role' => User::ROLE_SUPER_ADMIN,
                 'permissions' => null,

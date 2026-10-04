@@ -23,14 +23,15 @@ class AdminAuthenticationTest extends TestCase
         $user = User::query()->create([
             'name' => 'Content Admin',
             'email' => 'content-admin@example.test',
+            'username' => 'content_admin',
             'password' => Hash::make($password),
             'role' => User::ROLE_ADMIN,
             'is_active' => true,
         ]);
 
-        $this->get(route('admin.login'))->assertOk()->assertSee('Ingat saya');
+        $this->get(route('admin.login'))->assertOk()->assertSee('Username atau Email')->assertSee('Ingat saya');
         $this->post(route('admin.login.store'), [
-            'email' => $user->email,
+            'identifier' => $user->email,
             'password' => $password,
             'remember' => '1',
         ])->assertRedirect(route('admin.dashboard'));
@@ -40,21 +41,61 @@ class AdminAuthenticationTest extends TestCase
         $this->assertGuest();
     }
 
+    public function test_active_admin_can_login_with_username(): void
+    {
+        $password = Str::random(48);
+        $user = User::query()->create([
+            'name' => 'Username Admin',
+            'email' => 'username-admin@example.test',
+            'username' => 'username_admin',
+            'password' => Hash::make($password),
+            'role' => User::ROLE_ADMIN,
+            'is_active' => true,
+        ]);
+
+        $this->post(route('admin.login.store'), [
+            'identifier' => 'username_admin',
+            'password' => $password,
+        ])->assertRedirect(route('admin.dashboard'));
+
+        $this->assertAuthenticatedAs($user);
+    }
+
+    public function test_wrong_password_is_rejected_with_generic_identifier_error(): void
+    {
+        User::query()->create([
+            'name' => 'Wrong Password Admin',
+            'email' => 'wrong-password@example.test',
+            'username' => 'wrong_password',
+            'password' => Hash::make(Str::random(48)),
+            'role' => User::ROLE_ADMIN,
+            'is_active' => true,
+        ]);
+
+        $this->post(route('admin.login.store'), [
+            'identifier' => 'wrong_password',
+            'password' => 'incorrect-password',
+        ])->assertSessionHasErrors('identifier');
+
+        $this->assertGuest();
+    }
+
     public function test_inactive_admin_cannot_authenticate(): void
     {
         $password = Str::random(48);
         $user = User::query()->create([
             'name' => 'Disabled Admin',
             'email' => 'disabled-admin@example.test',
+            'username' => 'disabled_admin',
             'password' => Hash::make($password),
             'role' => User::ROLE_ADMIN,
             'is_active' => false,
         ]);
 
         $this->post(route('admin.login.store'), [
-            'email' => $user->email,
+            'identifier' => $user->email,
             'password' => $password,
-        ])->assertSessionHasErrors('email');
+        ])->assertSessionHasErrors('identifier');
         $this->assertGuest();
     }
 }

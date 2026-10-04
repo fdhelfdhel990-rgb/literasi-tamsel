@@ -18,6 +18,7 @@ class StoreAdminUserRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+            'username' => ['required', 'string', 'max:80', 'alpha_dash:ascii', 'unique:users,username'],
             'password' => ['required', 'string', 'min:12', 'confirmed'],
             'role' => ['required', Rule::in([User::ROLE_ADMIN, User::ROLE_SUB_ADMIN])],
             'permissions' => ['nullable', 'array'],

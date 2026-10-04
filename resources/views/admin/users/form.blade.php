@@ -8,6 +8,7 @@
     <div class="editor-grid">
         <label>Nama<input name="name" value="{{ old('name', $account->name) }}" required maxlength="255"></label>
         <label>Email<input name="email" type="email" value="{{ old('email', $account->email) }}" autocomplete="off" required maxlength="255"></label>
+        <label>Username<input name="username" value="{{ old('username', $account->username) }}" autocomplete="off" required maxlength="80" pattern="[A-Za-z0-9_-]+"></label>
         <label>Peran<select name="role" id="adminRole" required><option value="admin" @selected(old('role', $account->role ?: 'admin') === 'admin')>Admin</option><option value="sub_admin" @selected(old('role', $account->role) === 'sub_admin')>Sub-Admin</option></select></label>
         <label>Kata sandi {{ $account->exists ? '(kosongkan bila tidak diubah)' : '' }}<input name="password" type="password" autocomplete="new-password" {{ $account->exists ? '' : 'required' }} minlength="12"></label>
         <label>Konfirmasi kata sandi<input name="password_confirmation" type="password" autocomplete="new-password" {{ $account->exists ? '' : 'required' }} minlength="12"></label>

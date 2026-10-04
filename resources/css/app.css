@@ -158,3 +158,30 @@ html{font-family:var(--font-sans)}
 @media(max-width:760px){.related-posts .latest-news-thumbnail.image-fallback{width:76px;height:76px;min-height:76px;flex-basis:76px}}
 .admin-content .pagination{margin-top:18px}
 @media(max-width:760px){.table-actions{gap:8px;white-space:normal}.admin-image-preview{max-width:100%}.transfer-panel form{grid-template-columns:1fr}}
+
+/* Refinement pass: typography, focus states, homepage carousel, and hover-only Join Us highlight. */
+body,button,input,textarea,select,table,option,.btn,.nav-links a,.admin-body{font-family:var(--font-sans)}
+:focus-visible{outline:3px solid rgba(21,25,111,.35);outline-offset:3px}
+.btn{transition:background-color .2s ease,color .2s ease,border-color .2s ease,box-shadow .2s ease;transform:none}
+.btn:hover{transform:none}
+.btn-primary:hover,.btn-primary:focus-visible{background:#0f145f;box-shadow:0 4px 12px rgba(15,20,95,.18)}
+.btn-white:hover,.btn-white:focus-visible{background:#f2f4ff;color:#15196f}
+.btn-outline-light:hover,.btn-outline-light:focus-visible{background:#fff;color:#15196f;border-color:#fff}
+.btn-secondary:hover,.btn-secondary:focus-visible{background:#15196f;color:#fff;border-color:#15196f}
+.partner-viewport{overflow:hidden;touch-action:pan-y}
+.partner-strip{will-change:transform}
+.join-card{min-height:242px;padding:28px 32px 25px;border:1px solid #ededed;background:#fff;box-shadow:0 3px 8px rgba(0,0,0,.12);border-radius:8px;transition:background-color .2s ease,border-color .2s ease,box-shadow .2s ease}
+.join-card:hover,.join-card:focus-within{background:#e5e6fb;border:3px solid #161b74;box-shadow:0 4px 14px rgba(3,4,46,.08);padding:26px 30px 23px}
+.join-card .btn,.join-card .join-closed{margin-top:auto}
+@media(prefers-reduced-motion:reduce){.btn,.join-card,.partner-strip{transition:none!important;animation:none!important}}
+html,body{max-width:100%;overflow-x:hidden}
+.section,.container,.section-heading,.impact-grid,.partner-carousel,.post-grid{min-width:0}
+.section-heading h2,.impact-label,.impact-unit,.post-card h3{overflow-wrap:anywhere}
+@media(max-width:520px){
+    .section-heading h2{font-size:clamp(22px,8vw,28px);max-width:100%;text-wrap:balance}
+    .impact-grid{width:100%;grid-template-columns:repeat(2,minmax(0,1fr))}
+    .impact-grid>div{min-width:0;padding-left:8px;padding-right:8px}
+    .partner-carousel{width:100%;overflow:hidden}
+    .partner-viewport{min-width:0}
+    .section-news .section-heading p{max-width:100%}
+}

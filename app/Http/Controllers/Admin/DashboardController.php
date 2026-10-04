@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Book;
 use App\Models\MediaPartner;
 use App\Models\Publication;
+use App\Models\SiteSetting;
 use App\Models\User;
 
 class DashboardController extends Controller
@@ -17,6 +18,7 @@ class DashboardController extends Controller
             'publicationCount' => Publication::query()->count(),
             'partnerCount' => MediaPartner::query()->count(),
             'adminCount' => User::query()->where('is_active', true)->count(),
+            'impact' => SiteSetting::valueFor('community', ['impact' => []])['impact'] ?? [],
         ]);
     }
 }

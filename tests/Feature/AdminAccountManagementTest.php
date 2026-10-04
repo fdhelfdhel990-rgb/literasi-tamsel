@@ -23,6 +23,7 @@ class AdminAccountManagementTest extends TestCase
         $this->post(route('admin.users.store'), [
             'name' => 'Assigned Sub Admin',
             'email' => 'assigned-sub@example.test',
+            'username' => 'assigned_sub',
             'password' => $subAdminPassword,
             'password_confirmation' => $subAdminPassword,
             'role' => User::ROLE_SUB_ADMIN,
@@ -32,6 +33,7 @@ class AdminAccountManagementTest extends TestCase
 
         $subAdmin = User::query()->where('email', 'assigned-sub@example.test')->firstOrFail();
         $this->assertSame(User::ROLE_SUB_ADMIN, $subAdmin->role);
+        $this->assertSame('assigned_sub', $subAdmin->username);
         $this->assertSame(['books.manage'], $subAdmin->permissions);
         $this->assertTrue(Hash::check($subAdminPassword, $subAdmin->password));
         $this->assertNotSame($subAdminPassword, $subAdmin->password);
@@ -40,6 +42,7 @@ class AdminAccountManagementTest extends TestCase
         $this->post(route('admin.users.store'), [
             'name' => 'Escalation Attempt',
             'email' => 'escalation@example.test',
+            'username' => 'escalation',
             'password' => $escalationPassword,
             'password_confirmation' => $escalationPassword,
             'role' => User::ROLE_SUPER_ADMIN,

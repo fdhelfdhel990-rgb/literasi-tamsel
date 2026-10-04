@@ -5,12 +5,13 @@
 <section class="admin-panel">
     <div class="table-scroll">
         <table class="data-table">
-            <thead><tr><th>Nama</th><th>Email</th><th>Peran</th><th>Status</th><th>Aksi</th></tr></thead>
+            <thead><tr><th>Nama</th><th>Email</th><th>Username</th><th>Peran</th><th>Status</th><th>Aksi</th></tr></thead>
             <tbody>
                 @foreach($users as $account)
                     <tr>
                         <td class="table-title">{{ $account->name }}</td>
                         <td>{{ $account->email }}</td>
+                        <td>{{ $account->username }}</td>
                         <td>{{ str_replace('_', ' ', ucfirst($account->role)) }}</td>
                         <td><span class="pill {{ $account->is_active ? 'published' : 'pending' }}">{{ $account->is_active ? 'Aktif' : 'Nonaktif' }}</span></td>
                         <td class="table-actions">

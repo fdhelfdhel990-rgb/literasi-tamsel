@@ -32,6 +32,7 @@ class SiteContentRequest extends FormRequest
             'profile.home_intro' => ['required', 'string', 'max:1000'],
             'profile.about' => ['required', 'string', 'max:3000'],
             'profile.mission' => ['required', 'string', 'max:2000'],
+            'hero_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
         ];
     }
 }

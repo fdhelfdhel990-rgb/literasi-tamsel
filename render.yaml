@@ -59,8 +59,6 @@ services:
         sync: false
       - key: R2_USE_PATH_STYLE_ENDPOINT
         value: "true"
-      - key: R2_VISIBILITY
-        value: public
       - key: INITIAL_ADMIN_NAME
         sync: false
       - key: INITIAL_ADMIN_EMAIL

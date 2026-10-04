@@ -121,6 +121,48 @@ Artisan::command('aiven:test-connection', function (): int {
     }
 });
 
+Artisan::command('aiven:deployment-preflight', function (): int {
+    $connection = 'mysql_aiven';
+
+    try {
+        DB::purge($connection);
+        $db = DB::connection($connection);
+        $database = $db->selectOne('SELECT DATABASE() AS database_name');
+        $version = $db->selectOne('SELECT VERSION() AS version');
+        $migrationsTable = $db->selectOne(
+            "SELECT COUNT(*) AS table_count FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = 'migrations'"
+        );
+        $sessionsTable = $db->selectOne(
+            "SELECT COUNT(*) AS table_count FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = 'sessions'"
+        );
+
+        $migrationCount = 0;
+        $latestBatch = null;
+        if ((int) ($migrationsTable->table_count ?? 0) > 0) {
+            $summary = $db->selectOne('SELECT COUNT(*) AS migration_count, MAX(batch) AS latest_batch FROM migrations');
+            $migrationCount = (int) ($summary->migration_count ?? 0);
+            $latestBatch = $summary->latest_batch ?? null;
+        }
+
+        $this->info('Aiven deployment preflight berhasil.');
+        $this->line('Connection: '.$connection);
+        $this->line('Database: '.($database->database_name ?? '[tidak terpilih]'));
+        $this->line('MySQL version: '.($version->version ?? '[tidak terbaca]'));
+        $this->line('Migrations table: '.(((int) ($migrationsTable->table_count ?? 0) > 0) ? 'ada' : 'belum ada'));
+        $this->line('Applied migrations: '.$migrationCount);
+        $this->line('Latest migration batch: '.($latestBatch ?? '-'));
+        $this->line('Sessions table: '.(((int) ($sessionsTable->table_count ?? 0) > 0) ? 'ada' : 'belum ada'));
+        $this->warn('Preflight ini read-only. Belum menjalankan migration atau seeder.');
+
+        return 0;
+    } catch (Throwable $exception) {
+        $this->error('Aiven deployment preflight gagal.');
+        $this->line($exception->getMessage());
+
+        return 1;
+    }
+});
+
 Artisan::command('admin:reset-credentials {identifier : Email atau username akun admin}', function (string $identifier): int {
     $normalized = mb_strtolower(trim($identifier));
     $user = User::query()

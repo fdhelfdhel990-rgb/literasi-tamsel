@@ -40,7 +40,6 @@ return [
             'url' => env('R2_PUBLIC_URL'),
             'endpoint' => env('R2_ENDPOINT'),
             'use_path_style_endpoint' => env('R2_USE_PATH_STYLE_ENDPOINT', true),
-            'visibility' => env('R2_VISIBILITY', 'public'),
             'http' => array_filter([
                 'verify' => env('R2_HTTP_CA_BUNDLE') ?: true,
             ]),

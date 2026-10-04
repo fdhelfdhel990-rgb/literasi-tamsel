@@ -16,6 +16,26 @@ class R2StorageCompatibilityTest extends TestCase
     use CreatesTestImages;
     use RefreshDatabase;
 
+    public function test_r2_disk_uses_public_url_without_acl_visibility_config(): void
+    {
+        config([
+            'filesystems.disks.r2.key' => 'test-key',
+            'filesystems.disks.r2.secret' => 'test-secret',
+            'filesystems.disks.r2.bucket' => 'test-bucket',
+            'filesystems.disks.r2.region' => 'auto',
+            'filesystems.disks.r2.url' => 'https://media.example.test',
+            'filesystems.disks.r2.endpoint' => 'https://account-id.r2.cloudflarestorage.com',
+            'filesystems.disks.r2.http.verify' => 'C:/certs/cacert.pem',
+        ]);
+
+        $config = config('filesystems.disks.r2');
+
+        $this->assertArrayNotHasKey('visibility', $config);
+        $this->assertSame('https://media.example.test/publications/example.jpg', Storage::disk('r2')->url('publications/example.jpg'));
+        $this->assertSame('C:/certs/cacert.pem', $config['http']['verify']);
+        $this->assertNotFalse($config['http']['verify']);
+    }
+
     public function test_cms_upload_update_and_delete_uses_configured_r2_disk(): void
     {
         config([

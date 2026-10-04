@@ -30,6 +30,35 @@ if [ "${APP_ENV:-}" = "production" ] && [ "${DB_CONNECTION:-}" = "mysql_aiven" ]
     fi
 fi
 
+# Opt-in, non-blocking TLS diagnostics for Render Free (no shell access).
+# Never print credentials, certificate contents, or PHP environment variables.
+if [ "${AIVEN_TLS_DIAGNOSTICS:-0}" = "1" ] && [ "${DB_CONNECTION:-}" = "mysql_aiven" ]; then
+    echo "Aiven TLS check: diagnostic enabled."
+    if ! command -v openssl >/dev/null 2>&1; then
+        echo "Aiven TLS check: openssl unavailable."
+    elif [ -z "${AIVEN_MYSQL_ATTR_SSL_CA:-}" ] || [ ! -r "${AIVEN_MYSQL_ATTR_SSL_CA}" ]; then
+        echo "Aiven TLS check: CA file missing or unreadable."
+    elif ! openssl x509 -in "$AIVEN_MYSQL_ATTR_SSL_CA" -noout -checkend 0 >/dev/null 2>&1; then
+        echo "Aiven TLS check: CA is invalid, expired, or not a readable PEM certificate."
+    else
+        echo "Aiven TLS check: PEM parses and is currently valid."
+        openssl x509 -in "$AIVEN_MYSQL_ATTR_SSL_CA" -noout -fingerprint -sha256 2>/dev/null || true
+        if [ -n "${AIVEN_DB_HOST:-}" ] && [ -n "${AIVEN_DB_PORT:-}" ]; then
+            tls_result="ok"
+            tls_output=$(timeout 12 openssl s_client -starttls mysql \
+                -connect "${AIVEN_DB_HOST}:${AIVEN_DB_PORT}" \
+                -servername "$AIVEN_DB_HOST" \
+                -CAfile "$AIVEN_MYSQL_ATTR_SSL_CA" \
+                -verify_return_error -brief </dev/null 2>&1) || tls_result="failed"
+            echo "Aiven TLS check: OpenSSL MySQL handshake $tls_result."
+            printf '%s\n' "$tls_output" | grep -Ei 'Verification:|verify error|error:|certificate verify failed|CONNECTION ESTABLISHED|Protocol version|Ciphersuite|no peer|unexpected eof|handshake|BIO_connect' | head -n 8 || true
+        else
+            echo "Aiven TLS check: host or port is missing."
+        fi
+    fi
+    php -r 'echo "Aiven TLS check: PHP mysqlnd ".(phpversion("mysqlnd") ?: "unavailable")."; ".OPENSSL_VERSION_TEXT.PHP_EOL;' 2>/dev/null || true
+fi
+
 rm -f bootstrap/cache/config.php bootstrap/cache/routes-*.php bootstrap/cache/events.php
 
 exec "$@"

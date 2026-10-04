@@ -1,10 +1,58 @@
 <?php
 use App\Models\User;
+use Aws\S3\S3Client;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 Artisan::command('inspire', fn () => $this->comment('Terus bergerak bersama literasi.'));
+
+Artisan::command('r2:test-connection', function (): int {
+    $config = config('filesystems.disks.r2');
+    $required = [
+        'R2_ACCESS_KEY_ID' => $config['key'] ?? null,
+        'R2_SECRET_ACCESS_KEY' => $config['secret'] ?? null,
+        'R2_BUCKET' => $config['bucket'] ?? null,
+        'R2_ENDPOINT' => $config['endpoint'] ?? null,
+    ];
+
+    foreach ($required as $name => $value) {
+        if (blank($value)) {
+            $this->error("Konfigurasi R2 belum lengkap: {$name}.");
+
+            return 1;
+        }
+    }
+
+    try {
+        $client = new S3Client([
+            'version' => 'latest',
+            'region' => $config['region'] ?: 'auto',
+            'endpoint' => $config['endpoint'],
+            'use_path_style_endpoint' => (bool) ($config['use_path_style_endpoint'] ?? true),
+            'http' => $config['http'] ?? [],
+            'credentials' => [
+                'key' => $config['key'],
+                'secret' => $config['secret'],
+            ],
+        ]);
+
+        $client->headBucket(['Bucket' => $config['bucket']]);
+
+        $this->info('Koneksi Cloudflare R2 berhasil.');
+        $this->line('Disk: r2');
+        $this->line('Bucket: '.$config['bucket']);
+        $this->line('Endpoint: '.preg_replace('/^https?:\\/\\//', '', (string) $config['endpoint']));
+        $this->line('Public URL configured: '.(filled($config['url'] ?? null) ? 'yes' : 'no'));
+
+        return 0;
+    } catch (Throwable $exception) {
+        $this->error('Koneksi Cloudflare R2 gagal.');
+        $this->line($exception->getMessage());
+
+        return 1;
+    }
+});
 
 Artisan::command('aiven:test-connection', function (): int {
     $connection = 'mysql_aiven';

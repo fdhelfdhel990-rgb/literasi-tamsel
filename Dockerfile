@@ -10,7 +10,7 @@ RUN npm run build
 
 FROM php:8.2-apache
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates git unzip libpq-dev libzip-dev libonig-dev \
+    ca-certificates openssl git unzip libpq-dev libzip-dev libonig-dev \
     && docker-php-ext-install pdo_pgsql pdo_mysql zip mbstring \
     && a2enmod rewrite headers \
     && rm -rf /var/lib/apt/lists/*

@@ -8,7 +8,7 @@ COPY resources ./resources
 COPY public ./public
 RUN npm run build
 
-FROM php:8.2-apache
+FROM php:8.4-apache
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates openssl git unzip libpq-dev libzip-dev libonig-dev \
     && docker-php-ext-install pdo_pgsql pdo_mysql zip mbstring \

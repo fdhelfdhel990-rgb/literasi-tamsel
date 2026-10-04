@@ -1,0 +1,248 @@
+{
+  "books": [
+    {
+      "slug": "negeri-5-menara",
+      "title": "Negeri 5 Menara",
+      "author": "Ahmad Fuadi",
+      "publisher": "Gramedia Pustaka Utama",
+      "genre": "Novel",
+      "cover": "",
+      "description": "Kisah persahabatan dan pendidikan enam santri di pondok pesantren.",
+      "condition": "Baik"
+    },
+    {
+      "slug": "quarter-life-crisis",
+      "title": "Quarter Life Crisis",
+      "author": "Tim Penulis",
+      "publisher": "Penerbit Komunitas",
+      "genre": "Pengembangan diri",
+      "cover": "books/quarter-life.jpg",
+      "description": "Bacaan mengenai fase awal kedewasaan.",
+      "condition": "Baik"
+    },
+    {
+      "slug": "sejarah-indonesia",
+      "title": "Sejarah Indonesia",
+      "author": "Tim Sejarah",
+      "publisher": "Pusat Literasi",
+      "genre": "Sejarah",
+      "cover": "books/history.jpg",
+      "description": "Mengenal sejarah dan peristiwa penting Indonesia.",
+      "condition": "Baik"
+    },
+    {
+      "slug": "gajah-ingin-terbang",
+      "title": "Gajah yang Ingin Terbang",
+      "author": "Tim Penulis Anak",
+      "publisher": "Penerbit Anak",
+      "genre": "Anak",
+      "cover": "books/elephant.jpg",
+      "description": "Cerita bergambar untuk anak-anak.",
+      "condition": "Baik"
+    },
+    {
+      "slug": "sains-sekitar-kita",
+      "title": "Sains di Sekitar Kita",
+      "author": "Tim Edukasi",
+      "publisher": "Pusat Sains",
+      "genre": "Sains",
+      "cover": "",
+      "description": "Pengenalan sains melalui kejadian sehari-hari.",
+      "condition": "Baik"
+    },
+    {
+      "slug": "pelangi-di-desa",
+      "title": "Pelangi di Desa",
+      "author": "Tim Relawan",
+      "publisher": "Literasi Tamsel",
+      "genre": "Anak",
+      "cover": "",
+      "description": "Cerita pendek untuk pembaca muda.",
+      "condition": "Baik"
+    },
+    {
+      "slug": "bumi-manusia",
+      "title": "Bumi Manusia",
+      "author": "Pramoedya Ananta Toer",
+      "publisher": "Lentera Dipantara",
+      "genre": "Novel",
+      "cover": "",
+      "description": "Contoh entri katalog. Validasi koleksi sebelum produksi.",
+      "condition": "Baik"
+    },
+    {
+      "slug": "matematika-menyenangkan",
+      "title": "Matematika Menyenangkan",
+      "author": "Tim Edukasi",
+      "publisher": "Pusat Literasi",
+      "genre": "Education",
+      "cover": "",
+      "description": "Belajar berhitung dengan cara yang mudah.",
+      "condition": "Baik"
+    },
+    {
+      "slug": "gerobak-cerita",
+      "title": "Gerobak Cerita",
+      "author": "Relawan Komunitas",
+      "publisher": "Literasi Tamsel",
+      "genre": "Anak",
+      "cover": "",
+      "description": "Contoh data dummy yang dapat diganti oleh API.",
+      "condition": "Baik"
+    }
+  ],
+  "posts": [
+    {
+      "slug": "semangat-20-relawan",
+      "title": "Semangat 20 Relawan Membina 2 Perpustakaan Desa di Wilayah Tambun Selatan",
+      "date": "20 Agustus 2026",
+      "type": "Kegiatan",
+      "image": "community/volunteers.jpg",
+      "excerpt": "Komunitas terus bergerak melalui relawan aktif, pendampingan membaca, dan pengembangan dua perpustakaan desa."
+    },
+    {
+      "slug": "peluncuran-gerobak",
+      "title": "Peluncuran Gerobak Angkasa: Menjangkau Pelosok Tambun Selatan dengan Buku",
+      "date": "15 Agustus 2026",
+      "type": "Publikasi Internal",
+      "image": "community/gerobak.jpg",
+      "excerpt": "Gerobak Angkasa membawa koleksi buku langsung ke lingkungan tempat tinggal anak-anak."
+    },
+    {
+      "slug": "literasi-bersama",
+      "title": "Membangun Ruang Membaca Bersama Generasi Muda",
+      "date": "25 Agustus 2026",
+      "type": "Liputan Media",
+      "image": "community/activity.jpg",
+      "excerpt": "Dokumentasi kegiatan literasi, kegiatan relawan, dan kolaborasi komunitas."
+    },
+    {
+      "slug": "perpustakaan-desa",
+      "title": "Dua Perpustakaan Desa Binaan dan Gerakan Membaca",
+      "date": "18 Agustus 2026",
+      "type": "Kegiatan",
+      "image": "community/children.jpg",
+      "excerpt": "Memperluas akses buku melalui perpustakaan desa dan aktivitas membaca bersama."
+    },
+    {
+      "slug": "hari-membaca",
+      "title": "Hari Membaca Bersama Relawan Tambun Selatan",
+      "date": "12 Agustus 2026",
+      "type": "Kegiatan",
+      "image": "community/volunteers.jpg",
+      "excerpt": "Relawan berkumpul untuk menemani anak-anak membaca dan belajar."
+    },
+    {
+      "slug": "kolaborasi-komunitas",
+      "title": "Kolaborasi untuk Akses Literasi yang Lebih Luas",
+      "date": "10 Agustus 2026",
+      "type": "Publikasi Internal",
+      "image": "community/gerobak.jpg",
+      "excerpt": "Peluang kolaborasi dengan komunitas lain, mitra media, dan relawan."
+    },
+    {
+      "slug": "gerobak-berkeliling",
+      "title": "Gerobak Angkasa Berkeliling Tambun Selatan",
+      "date": "8 Agustus 2026",
+      "type": "Kegiatan",
+      "image": "community/van.jpg",
+      "excerpt": "Kegiatan perpustakaan keliling untuk mendekatkan buku bacaan kepada anak-anak."
+    },
+    {
+      "slug": "belajar-bersama",
+      "title": "Cerita dari Kegiatan Belajar Bersama",
+      "date": "5 Agustus 2026",
+      "type": "Kegiatan",
+      "image": "community/activity.jpg",
+      "excerpt": "Momen aktivitas komunitas dan dukungan untuk pendidikan generasi muda."
+    },
+    {
+      "slug": "relawan-bergerak",
+      "title": "Relawan Bergerak untuk Literasi Anak",
+      "date": "1 Agustus 2026",
+      "type": "Liputan Media",
+      "image": "community/volunteers.jpg",
+      "excerpt": "Kisah kegiatan relawan dalam memperluas kesempatan membaca."
+    }
+  ],
+  "partners": [
+    {
+      "name": "KAI",
+      "image": "partners/kai.jpg"
+    },
+    {
+      "name": "Mitra komunitas",
+      "image": "partners/partner-blue.jpg"
+    },
+    {
+      "name": "Pertamina",
+      "image": "partners/pertamina.jpg"
+    }
+  ],
+  "community": {
+    "impact": [
+      {
+        "label": "Berdampak Positif ke",
+        "value": 400,
+        "prefix": ">",
+        "suffix": "",
+        "unit": "Anak"
+      },
+      {
+        "label": "Koleksi Bacaan",
+        "value": 500,
+        "prefix": "±",
+        "suffix": "",
+        "unit": "Buku"
+      },
+      {
+        "label": "Sukarelawan Aktif",
+        "value": 20,
+        "prefix": "",
+        "suffix": "",
+        "unit": "Remaja"
+      },
+      {
+        "label": "Perpustakaan Desa",
+        "value": 2,
+        "prefix": "",
+        "suffix": "",
+        "unit": "Lokasi Binaan"
+      }
+    ],
+    "contact": {
+      "whatsapp": "",
+      "location": "Kec. Tambun Sel., Kabupaten Bekasi, Jawa Barat",
+      "email": ""
+    },
+    "social": {
+      "youtube": "",
+      "instagram": "",
+      "tiktok": "",
+      "facebook": ""
+    },
+    "join": [
+      {
+        "title": "Ikut Volunteer",
+        "description": "Bergabung sebagai pendamping membaca dan penggerak kegiatan komunitas.",
+        "button": "Daftar sebagai volunteer",
+        "url": "",
+        "open": true
+      },
+      {
+        "title": "Ikut Volunteer Event",
+        "description": "Terlibat pada agenda literasi tertentu sesuai waktu dan kemampuan Anda.",
+        "button": "Daftar sebagai volunteer",
+        "url": "",
+        "open": true
+      },
+      {
+        "title": "Ajukan Kerja Sama Kolaborasi",
+        "description": "Buka peluang kemitraan program, publikasi, donasi, atau dukungan operasional.",
+        "button": "Ajukan Kolaborasi",
+        "url": "",
+        "open": true
+      }
+    ]
+  }
+}

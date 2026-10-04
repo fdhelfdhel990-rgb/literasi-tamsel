@@ -21,14 +21,21 @@ if [ "${APP_ENV:-}" = "production" ] && [ "${DB_CONNECTION:-}" = "mysql_aiven" ]
             *)
                 if [ -r "$ca_file" ]; then
                     echo "Startup diagnostics: Aiven CA file is readable."
-                    if command -v runuser >/dev/null 2>&1; then
-                        if runuser -u www-data -- test -r "$ca_file"; then
-                            echo "Startup diagnostics: Apache worker can read Aiven CA file."
+                    # Render's /etc/secrets mount can be traversable by root only.
+                    # Stage the public CA (not a private key) outside DocumentRoot,
+                    # with read access for the Apache worker; preserve original mount.
+                    runtime_ca="/var/www/html/storage/framework/aiven-ca.pem"
+                    if openssl x509 -in "$ca_file" -noout >/dev/null 2>&1 \
+                        && install -m 0640 -o root -g www-data "$ca_file" "$runtime_ca"; then
+                        export AIVEN_MYSQL_ATTR_SSL_CA="$runtime_ca"
+                        if runuser -u www-data -- test -r "$runtime_ca"; then
+                            echo "Startup diagnostics: staged Aiven CA is readable by Apache worker."
                         else
-                            echo "Startup diagnostics: Apache worker CANNOT read Aiven CA file."
+                            echo "Startup diagnostics: staged Aiven CA is NOT readable by Apache worker."
                         fi
+                    else
+                        echo "Startup diagnostics: failed to validate or stage Aiven CA."
                     fi
-                    stat -c 'Startup diagnostics: CA file mode=%a owner=%U group=%G' "$ca_file" 2>/dev/null || true
                 else
                     echo "Startup diagnostics: Aiven CA file is not readable at configured path."
                     echo "Startup diagnostics: expected Render secret file path is /etc/secrets/aiven-ca.pem."

@@ -49,9 +49,9 @@ if [ "${AIVEN_TLS_DIAGNOSTICS:-0}" = "1" ] && [ "${DB_CONNECTION:-}" = "mysql_ai
                 -connect "${AIVEN_DB_HOST}:${AIVEN_DB_PORT}" \
                 -servername "$AIVEN_DB_HOST" \
                 -CAfile "$AIVEN_MYSQL_ATTR_SSL_CA" \
-                -verify_return_error -brief </dev/null 2>&1) || tls_result="failed"
+                -verify_hostname "$AIVEN_DB_HOST" -verify_return_error -brief </dev/null 2>&1) || tls_result="failed"
             echo "Aiven TLS check: OpenSSL MySQL handshake $tls_result."
-            printf '%s\n' "$tls_output" | grep -Ei 'Verification:|verify error|error:|certificate verify failed|CONNECTION ESTABLISHED|Protocol version|Ciphersuite|no peer|unexpected eof|handshake|BIO_connect' | head -n 8 || true
+            printf '%s\n' "$tls_output" | grep -Ei 'Verification|verify|error|certificate|CONNECTION|Protocol|Cipher|no peer|unexpected|handshake|BIO_connect|SSL|TLS|server response|STARTTLS' | head -n 8 || true
         else
             echo "Aiven TLS check: host or port is missing."
         fi

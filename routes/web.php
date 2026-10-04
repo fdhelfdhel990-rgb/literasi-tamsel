@@ -12,7 +12,6 @@ use App\Http\Controllers\PublicSiteController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PublicSiteController::class, 'home'])->name('home');
-Route::get('/up', fn () => response('OK', 200, ['Content-Type' => 'text/plain']))->name('health');
 Route::get('/about', [PublicSiteController::class, 'about'])->name('about');
 Route::get('/publication', [PublicSiteController::class, 'publicationIndex'])->name('publication.index');
 Route::get('/publication/{slug}', [PublicSiteController::class, 'publicationDetail'])->name('publication.show');

@@ -11,15 +11,17 @@ Lihat langkah lengkap di [README_FINAL.md](../README_FINAL.md). Ringkasannya:
 5. Opsional untuk sample development saja: `php artisan db:seed --class=DemoContentSeeder`. Jangan jalankan seeder sample tersebut di production.
 6. Jalankan `php artisan storage:link`, `npm run build`, lalu `php artisan serve`.
 
-## Render + MySQL + R2
+## Render + Aiven MySQL + Cloudflare R2
 
 `Dockerfile` membangun aset dengan `npm ci`, menggunakan `composer.lock`, memasang PDO MySQL dan S3 adapter. `render.yaml` menyediakan nama env vars; nilai sensitif ditandai `sync: false`.
-1. Provision layanan MySQL 8+/MariaDB eksternal dengan TLS dan backup otomatis. Render blueprint tidak membuat MySQL sendiri; masukkan DB host/port/database/username/password dari penyedia yang dipilih.
-2. Buat bucket R2 untuk media publik. Atur custom/public asset URL sebagai `AWS_URL`, S3 endpoint sebagai `AWS_ENDPOINT`, bucket, access key, secret, region `auto`, `AWS_VISIBILITY=public`, dan path-style endpoint. Pastikan bucket/custom domain mengizinkan read untuk aset publik. Simpan CA database bila diwajibkan pada secret file dan set `MYSQL_ATTR_SSL_CA` ke path file itu.
-3. Set `APP_ENV=production`, `APP_DEBUG=false`, `APP_URL`, `APP_KEY` Laravel `base64:...`, `SESSION_DRIVER=database`, `CACHE_STORE=array`, `FILESYSTEM_DISK=s3`, `DB_CONNECTION=mysql`, dan tiga `INITIAL_ADMIN_*` melalui Render Environment settings.
-4. Deploy image, kemudian dari Render Shell atau job deploy yang disetujui jalankan `php artisan migrate --force`.
-5. Setelah migrasi sukses dan env Super Admin diisi, jalankan `php artisan db:seed --force`. Default seeder hanya membuat settings scaffold, tiga kartu Join Us, dan Super Admin; tidak mengimpor publikasi/buku contoh.
-6. Login di `/admin/login`, buat akun Admin/Sub-Admin, lalu masukkan konten resmi. Verifikasi `/up`, setiap public page, CSRF/session, permission, upload ke R2, URL public media, backup DB, dan restore.
+1. Provision Aiven MySQL 8+ dengan TLS dan backup otomatis. Render blueprint tidak membuat MySQL sendiri; masukkan `AIVEN_DB_HOST`, `AIVEN_DB_PORT`, `AIVEN_DB_DATABASE`, `AIVEN_DB_USERNAME`, dan `AIVEN_DB_PASSWORD` dari Aiven.
+2. Upload CA certificate Aiven sebagai Render Secret File dengan path `/etc/secrets/aiven-ca.pem`, lalu set `AIVEN_MYSQL_ATTR_SSL_CA=/etc/secrets/aiven-ca.pem`. Jangan gunakan path Windows seperti `C:/certificates/...` di Render.
+3. Buat bucket R2 untuk media publik. Atur custom/public asset URL sebagai `R2_PUBLIC_URL`, S3 API endpoint sebagai `R2_ENDPOINT`, bucket sebagai `R2_BUCKET`, access key/secret, region `auto`, dan path-style endpoint. Jangan set ACL/visibility object untuk R2; bucket/custom domain yang mengatur public read.
+4. Set `APP_ENV=production`, `APP_DEBUG=false`, `APP_URL`, `APP_KEY` Laravel `base64:...`, `SESSION_DRIVER=database`, `CACHE_STORE=array`, `FILESYSTEM_DISK=r2`, `DB_CONNECTION=mysql_aiven`, dan tiga `INITIAL_ADMIN_*` melalui Render Environment settings.
+5. Deploy image. Container startup hanya memvalidasi CA Aiven dan menjalankan Apache; tidak menjalankan migration atau seeder otomatis.
+6. Dari komputer lokal, setelah target database disetujui, cek dahulu `php artisan aiven:deployment-preflight`, lalu jalankan `php artisan migrate --database=mysql_aiven --force`.
+7. Setelah migrasi sukses dan env Super Admin diisi, jalankan `php artisan db:seed --database=mysql_aiven --class=InitialSuperAdminSeeder --force` dan `php artisan db:seed --database=mysql_aiven --class=SiteDefaultsSeeder --force`. Seeder idempotent dan tidak mengganti password akun existing.
+8. Login di `/admin/login`, buat akun Admin/Sub-Admin, lalu masukkan konten resmi. Verifikasi `/up`, setiap public page, CSRF/session, permission, upload ke R2, URL public media, backup DB, dan restore.
 
 ## APP_KEY dan Keamanan
 

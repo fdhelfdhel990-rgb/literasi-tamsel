@@ -21,6 +21,14 @@ if [ "${APP_ENV:-}" = "production" ] && [ "${DB_CONNECTION:-}" = "mysql_aiven" ]
             *)
                 if [ -r "$ca_file" ]; then
                     echo "Startup diagnostics: Aiven CA file is readable."
+                    if command -v runuser >/dev/null 2>&1; then
+                        if runuser -u www-data -- test -r "$ca_file"; then
+                            echo "Startup diagnostics: Apache worker can read Aiven CA file."
+                        else
+                            echo "Startup diagnostics: Apache worker CANNOT read Aiven CA file."
+                        fi
+                    fi
+                    stat -c 'Startup diagnostics: CA file mode=%a owner=%U group=%G' "$ca_file" 2>/dev/null || true
                 else
                     echo "Startup diagnostics: Aiven CA file is not readable at configured path."
                     echo "Startup diagnostics: expected Render secret file path is /etc/secrets/aiven-ca.pem."

@@ -31,7 +31,8 @@ ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 COPY docker/apache/000-default.conf /etc/apache2/sites-available/000-default.conf
 RUN sed -ri -e 's!/var/www/html!/var/www/html/public!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf \
     && printf '<Directory /var/www/html/public>\nOptions -Indexes +FollowSymLinks\nAllowOverride All\nRequire all granted\nFallbackResource /index.php\n</Directory>\n' > /etc/apache2/conf-available/laravel.conf \
-    && a2enconf laravel
+    && a2enconf laravel \
+    && apache2ctl -t
 EXPOSE 80
 RUN chmod +x docker/entrypoint.sh
 ENTRYPOINT ["docker/entrypoint.sh"]

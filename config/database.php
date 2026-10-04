@@ -6,6 +6,11 @@ $mysqlSslCaOption = class_exists(\Pdo\Mysql::class)
     ? \Pdo\Mysql::ATTR_SSL_CA
     : PDO::MYSQL_ATTR_SSL_CA;
 
+$mysqlOptions = static fn (array $options): array => array_filter(
+    $options,
+    static fn ($value): bool => $value !== null && $value !== ''
+);
+
 return [
     'default' => env('DB_CONNECTION', 'mysql'),
     'connections' => [
@@ -24,9 +29,29 @@ return [
             'prefix_indexes' => true,
             'strict' => true,
             'engine' => null,
-            'options' => extension_loaded('pdo_mysql') ? array_filter([
+            'options' => extension_loaded('pdo_mysql') ? $mysqlOptions([
                 PDO::ATTR_TIMEOUT => env('DB_TIMEOUT', 5),
                 $mysqlSslCaOption => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+        'mysql_aiven' => [
+            'driver' => 'mysql',
+            'url' => null,
+            'host' => env('AIVEN_DB_HOST'),
+            'port' => env('AIVEN_DB_PORT', '3306'),
+            'database' => env('AIVEN_DB_DATABASE'),
+            'username' => env('AIVEN_DB_USERNAME'),
+            'password' => env('AIVEN_DB_PASSWORD'),
+            'unix_socket' => '',
+            'charset' => env('AIVEN_DB_CHARSET', 'utf8mb4'),
+            'collation' => env('AIVEN_DB_COLLATION', 'utf8mb4_unicode_ci'),
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? $mysqlOptions([
+                PDO::ATTR_TIMEOUT => env('AIVEN_DB_TIMEOUT', 10),
+                $mysqlSslCaOption => env('AIVEN_MYSQL_ATTR_SSL_CA'),
             ]) : [],
         ],
         'sqlite' => [

@@ -21,6 +21,8 @@ RUN composer install --no-dev --prefer-dist --no-interaction --no-progress --no-
 COPY . .
 COPY --from=frontend /app/public/build ./public/build
 RUN mkdir -p storage/framework/cache/data storage/framework/sessions storage/framework/testing storage/framework/views storage/logs bootstrap/cache \
+    && test -f public/health.txt \
+    && test "$(cat public/health.txt)" = "OK" \
     && chown -R www-data:www-data storage bootstrap/cache \
     && rm -f bootstrap/cache/config.php bootstrap/cache/routes-*.php bootstrap/cache/events.php \
     && composer dump-autoload --optimize --no-dev \

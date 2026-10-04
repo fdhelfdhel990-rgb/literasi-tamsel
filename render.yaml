@@ -3,7 +3,7 @@ services:
     name: literasi-tamsel
     runtime: docker
     plan: free
-    healthCheckPath: /up
+    healthCheckPath: /health.txt
     envVars:
       - key: PORT
         value: "80"

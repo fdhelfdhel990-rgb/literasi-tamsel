@@ -12,9 +12,9 @@ class InitialSuperAdminSeeder extends Seeder
 {
     public function run(): void
     {
-        $name = trim((string) env('INITIAL_ADMIN_NAME', ''));
-        $email = mb_strtolower(trim((string) env('INITIAL_ADMIN_EMAIL', '')));
-        $password = (string) env('INITIAL_ADMIN_PASSWORD', '');
+        $name = trim((string) config('initial_admin.name', ''));
+        $email = mb_strtolower(trim((string) config('initial_admin.email', '')));
+        $password = (string) config('initial_admin.password', '');
 
         if ($name === '' && $email === '' && $password === '' && ! app()->environment('production')) {
             return;

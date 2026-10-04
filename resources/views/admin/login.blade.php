@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="robots" content="noindex,nofollow">
-    <title>Masuk Admin — Literasi Tamsel</title>
+    <title>Masuk Admin - Literasi Tamsel</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,7 +17,7 @@
             <span>ADMIN WORKSPACE</span>
             <h1>Kelola cerita, buku, dan kegiatan komunitas.</h1>
             <p>Panel pengelolaan Komunitas Literasi Remaja Tambun Selatan.</p>
-            <small class="login-copyright">© {{ date('Y') }} Komunitas Literasi Remaja Tambun Selatan</small>
+            <small class="login-copyright">&copy; {{ date('Y') }} Komunitas Literasi Remaja Tambun Selatan</small>
         </section>
         <section class="login-main">
             <div class="login-form">
@@ -45,7 +45,7 @@
                     <button class="btn btn-primary" type="submit">Masuk</button>
                 </form>
             </div>
-            <a class="login-return" href="{{ route('home') }}">← Kembali ke website publik</a>
+            <a class="login-return" href="{{ route('home') }}">&larr; Kembali ke website publik</a>
         </section>
     </main>
 </body>

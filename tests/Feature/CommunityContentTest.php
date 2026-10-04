@@ -9,6 +9,7 @@ use Database\Seeders\DatabaseSeeder;
 use Database\Seeders\DemoContentSeeder;
 use Database\Seeders\SiteDefaultsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Config;
 use Tests\Concerns\CreatesAdminUsers;
 use Tests\TestCase;
 
@@ -19,6 +20,10 @@ class CommunityContentTest extends TestCase
 
     public function test_default_database_seeder_does_not_import_mock_publications_or_books(): void
     {
+        Config::set('initial_admin.name', '');
+        Config::set('initial_admin.email', '');
+        Config::set('initial_admin.password', '');
+
         $this->seed(DatabaseSeeder::class);
 
         $this->assertDatabaseCount('site_settings', 1);

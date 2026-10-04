@@ -1,1 +1,17 @@
-<header class="site-header" data-menu-shell><div class="container nav-inner"><a href="{{ route('home') }}" class="brand" aria-label="Beranda Komunitas Literasi"><img src="{{ asset('images/branding/logo.png') }}" alt="Logo Komunitas Literasi Remaja Tambun Selatan"/></a><button class="mobile-trigger" data-menu-toggle aria-expanded="false" aria-controls="public-menu" type="button">☰ <span class="sr-only">Buka navigasi</span></button><nav id="public-menu" class="nav-links" aria-label="Navigasi utama"><a @class(['active'=>request()->routeIs('home')]) href="{{ route('home') }}">Home</a><a @class(['active'=>request()->routeIs('about')]) href="{{ route('about') }}">About Us</a><a @class(['active'=>request()->routeIs('publication.*')]) href="{{ route('publication.index') }}">Publication</a><a @class(['active'=>request()->routeIs('library.*')]) href="{{ route('library.index') }}">Digital Library</a><a @class(['active'=>request()->routeIs('join')]) href="{{ route('join') }}">Join Us</a></nav></div></header>
+<header class="site-header" data-menu-shell>
+    <div class="container nav-inner">
+        <a href="{{ route('home') }}" class="brand" aria-label="Beranda Komunitas Literasi">
+            <img src="{{ asset('images/branding/logo.png') }}" alt="Logo Komunitas Literasi Remaja Tambun Selatan">
+        </a>
+        <button class="mobile-trigger" data-menu-toggle aria-expanded="false" aria-controls="public-menu" type="button">
+            &#9776; <span class="sr-only">Buka navigasi</span>
+        </button>
+        <nav id="public-menu" class="nav-links" aria-label="Navigasi utama">
+            <a @class(['active' => request()->routeIs('home')]) href="{{ route('home') }}">Home</a>
+            <a @class(['active' => request()->routeIs('about')]) href="{{ route('about') }}">About Us</a>
+            <a @class(['active' => request()->routeIs('publication.*')]) href="{{ route('publication.index') }}">Publication</a>
+            <a @class(['active' => request()->routeIs('library.*')]) href="{{ route('library.index') }}">Digital Library</a>
+            <a @class(['active' => request()->routeIs('join')]) href="{{ route('join') }}">Join Us</a>
+        </nav>
+    </div>
+</header>

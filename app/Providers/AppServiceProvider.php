@@ -14,10 +14,17 @@ use App\Policies\SiteSettingPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\URL;
 class AppServiceProvider extends ServiceProvider {
     public function register(): void {}
     public function boot(): void
     {
+        // Public Render traffic always uses HTTPS after proxy termination.
+        // Ensure generated route/form URLs never downgrade credentials to HTTP.
+        if (app()->environment('production')) {
+            URL::forceScheme('https');
+        }
+
         Gate::policy(User::class, UserPolicy::class);
         Gate::policy(Publication::class, PublicationPolicy::class);
         Gate::policy(Book::class, BookPolicy::class);

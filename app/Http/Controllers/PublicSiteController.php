@@ -8,7 +8,7 @@ use App\Models\MediaPartner;
 use App\Models\Publication;
 use App\Models\SiteSetting;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use App\Support\PublicImage;
 
 class PublicSiteController extends Controller
 {
@@ -102,9 +102,7 @@ class PublicSiteController extends Controller
 
         $path = $community['profile']['hero_image_path'] ?? null;
         if ($path) {
-            $community['profile']['hero_image_url'] = str_starts_with($path, 'legacy:')
-                ? asset(substr($path, 7))
-                : Storage::disk(config('filesystems.default'))->url($path);
+            $community['profile']['hero_image_url'] = PublicImage::url($path);
         }
 
         return $community;

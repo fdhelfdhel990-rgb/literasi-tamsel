@@ -9,7 +9,12 @@ use App\Http\Controllers\Admin\PublicationController;
 use App\Http\Controllers\Admin\SiteContentController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\PublicSiteController;
+use App\Http\Controllers\PublicMediaController;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/media/{directory}/{filename}', [PublicMediaController::class, 'show'])
+    ->where(['directory' => 'books|publications|partners|community', 'filename' => '[A-Za-z0-9_-]+\\.(?:jpe?g|png|webp)'])
+    ->name('media.show');
 
 Route::get('/', [PublicSiteController::class, 'home'])->name('home');
 Route::get('/about', [PublicSiteController::class, 'about'])->name('about');

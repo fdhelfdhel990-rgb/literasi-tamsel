@@ -6,7 +6,7 @@ use App\Http\Controllers\Admin\Concerns\StoresImages;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\SiteContentRequest;
 use App\Models\SiteSetting;
-use Illuminate\Support\Facades\Storage;
+use App\Support\PublicImage;
 
 class SiteContentController extends Controller
 {
@@ -83,8 +83,6 @@ class SiteContentController extends Controller
             return null;
         }
 
-        return str_starts_with($path, 'legacy:')
-            ? asset(substr($path, 7))
-            : Storage::disk(config('filesystems.default'))->url($path);
+        return PublicImage::url($path);
     }
 }

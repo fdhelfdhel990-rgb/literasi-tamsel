@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\Storage;
+use App\Support\PublicImage;
 
 class MediaPartner extends Model
 {
@@ -30,9 +30,7 @@ class MediaPartner extends Model
             return null;
         }
 
-        return str_starts_with($path, 'legacy:')
-            ? asset(substr($path, 7))
-            : Storage::disk(config('filesystems.default'))->url($path);
+        return PublicImage::url($path);
     }
 
     public function toPublicArray(): array

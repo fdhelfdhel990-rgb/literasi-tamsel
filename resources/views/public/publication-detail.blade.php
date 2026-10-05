@@ -5,11 +5,16 @@
 @if($item)
     <section class="section detail-section">
         <div class="container">
-            <a href="{{ route('publication.index') }}" class="back-link">← Kembali</a>
+            <a href="{{ route('publication.index') }}" class="back-link icon-link icon-link-back">
+                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+                Kembali ke Publikasi
+            </a>
             <div class="detail-grid">
                 <article class="article-detail">
                     @if(!empty($item['image']))
-                        <div class="article-image-frame"><img class="article-hero" src="{{ $item['image'] }}" alt="{{ $item['title'] }}" data-image-fallback data-fallback-class="article-hero article-image-fallback" data-fallback-text="Gambar publikasi tidak tersedia"></div>
+                        <div class="article-image-frame">
+                            <img class="article-hero" src="{{ $item['image'] }}" alt="{{ $item['title'] }}" data-image-fallback data-fallback-class="article-hero article-image-fallback" data-fallback-text="Gambar publikasi tidak tersedia">
+                        </div>
                     @else
                         <div class="article-image-frame article-image-fallback" role="img" aria-label="Gambar publikasi tidak tersedia">Gambar publikasi tidak tersedia</div>
                     @endif
@@ -55,7 +60,7 @@
 @else
     <section class="section container">
         <h1>Publikasi tidak ditemukan</h1>
-        <a href="{{ route('publication.index') }}">Kembali ke daftar</a>
+        <a class="text-link icon-link" href="{{ route('publication.index') }}">Kembali ke daftar <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
     </section>
 @endif
 @endsection

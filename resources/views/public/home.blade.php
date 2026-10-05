@@ -22,30 +22,38 @@
 <section class="section partners-section">
     <div class="container">
         <div class="section-heading center"><h2>Media Partner</h2></div>
-        <div class="partner-carousel" data-partner-carousel>
-            <button class="partner-arrow" type="button" data-partner-prev aria-label="Geser mitra ke kiri">&lsaquo;</button>
-            <div class="partner-viewport" tabindex="0">
-                <div class="partner-strip" data-partner-strip>
-                    @foreach($partners as $partner)
-                        @if(!empty($partner['url']))<a class="partner-logo" href="{{ $partner['url'] }}" target="_blank" rel="noopener noreferrer">@else<div class="partner-logo">@endif
-                            @if(!empty($partner['image']))
-                                <img src="{{ $partner['image'] }}" alt="{{ $partner['name'] }}" data-image-fallback data-fallback-class="partner-image-fallback" data-fallback-text="{{ $partner['name'] }}">
-                            @else
-                                <span>{{ $partner['name'] }}</span>
-                            @endif
-                        @if(!empty($partner['url']))</a>@else</div>@endif
-                    @endforeach
+        @if(count($partners))
+            <div class="partner-carousel" data-partner-carousel>
+                <button class="partner-arrow partner-arrow-prev" type="button" data-partner-prev aria-label="Geser mitra ke kiri">
+                    <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+                </button>
+                <div class="partner-viewport" tabindex="0">
+                    <div class="partner-strip" data-partner-strip>
+                        @foreach($partners as $partner)
+                            @if(!empty($partner['url']))<a class="partner-logo" href="{{ $partner['url'] }}" target="_blank" rel="noopener noreferrer">@else<div class="partner-logo">@endif
+                                @if(!empty($partner['image']))
+                                    <img src="{{ $partner['image'] }}" alt="{{ $partner['name'] }}" data-image-fallback data-fallback-class="partner-image-fallback" data-fallback-text="{{ $partner['name'] }}">
+                                @else
+                                    <span>{{ $partner['name'] }}</span>
+                                @endif
+                            @if(!empty($partner['url']))</a>@else</div>@endif
+                        @endforeach
+                    </div>
                 </div>
+                <button class="partner-arrow partner-arrow-next" type="button" data-partner-next aria-label="Geser mitra ke kanan">
+                    <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+                </button>
             </div>
-            <button class="partner-arrow" type="button" data-partner-next aria-label="Geser mitra ke kanan">&rsaquo;</button>
-        </div>
+        @else
+            <p class="empty-state partner-empty">Media partner akan ditampilkan setelah data tersedia.</p>
+        @endif
     </div>
 </section>
 <section class="section section-news">
     <div class="container">
         <div class="section-heading center"><h2>Publikasi &amp; Kabar Kegiatan</h2><p>Dokumentasi perjalanan, artikel edukatif, dan liputan berita komunitas.</p></div>
         <div class="post-grid">@foreach(array_slice($posts, 0, 3) as $post)<x-post-card :post="$post"/>@endforeach</div>
-        <div class="center-action"><a class="btn btn-primary" href="{{ route('publication.index') }}">Publikasi &rarr;</a></div>
+        <div class="center-action"><a class="btn btn-primary icon-link" href="{{ route('publication.index') }}">Lihat Publikasi <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
     </div>
 </section>
 @endsection

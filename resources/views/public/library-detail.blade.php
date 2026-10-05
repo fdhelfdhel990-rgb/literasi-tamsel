@@ -1,3 +1,41 @@
-@extends('layouts.public') @php($item=collect($books)->firstWhere('slug',$slug)) @section('title',$item['title'] ?? 'Buku tidak ditemukan') @section('content')
-@if($item)<section class="section detail-section"><div class="container"><a class="back-link" href="{{ route('library.index') }}">← Kembali ke Digital Library</a><article class="book-detail"><div class="detail-book-cover {{ empty($item['cover'])?'book-cover-placeholder':'' }}">@if(!empty($item['cover']))<img src="{{ $item['cover'] }}" alt="Sampul {{ $item['title'] }}" data-image-fallback data-fallback-class="detail-book-cover-fallback" data-fallback-text="Sampul {{ $item['title'] }}">@else<strong>{{ $item['title'] }}</strong><span>Komunitas Literasi</span>@endif</div><div><span class="book-type">{{ $item['genre'] }}</span><h1>{{ $item['title'] }}</h1><div class="book-facts"><div><small>Penulis</small><b>{{ $item['author'] }}</b></div><div><small>Penerbit</small><b>{{ $item['publisher'] }}</b></div><div><small>Kategori / Genre</small><b>{{ $item['genre'] }}</b></div></div><h2>Deskripsi / Ringkasan Buku</h2><p>{{ $item['description'] }}</p></div></article></div></section>@else<section class="section container"><h1>Buku tidak ditemukan</h1><a href="{{ route('library.index') }}">Kembali ke katalog</a></section>@endif
+@extends('layouts.public')
+@php($item = collect($books)->firstWhere('slug', $slug))
+@section('title', $item['title'] ?? 'Buku tidak ditemukan')
+@section('content')
+@if($item)
+    <section class="section detail-section">
+        <div class="container">
+            <a class="back-link icon-link icon-link-back" href="{{ route('library.index') }}">
+                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+                Kembali ke Digital Library
+            </a>
+            <article class="book-detail">
+                <div class="detail-book-cover {{ empty($item['cover']) ? 'book-cover-placeholder' : '' }}">
+                    @if(!empty($item['cover']))
+                        <img src="{{ $item['cover'] }}" alt="Sampul {{ $item['title'] }}" data-image-fallback data-fallback-class="detail-book-cover-fallback" data-fallback-text="Sampul {{ $item['title'] }}">
+                    @else
+                        <strong>{{ $item['title'] }}</strong>
+                        <span>Komunitas Literasi</span>
+                    @endif
+                </div>
+                <div>
+                    <span class="book-type">{{ $item['genre'] }}</span>
+                    <h1>{{ $item['title'] }}</h1>
+                    <div class="book-facts">
+                        <div><small>Penulis</small><b>{{ $item['author'] }}</b></div>
+                        <div><small>Penerbit</small><b>{{ $item['publisher'] }}</b></div>
+                        <div><small>Kategori / Genre</small><b>{{ $item['genre'] }}</b></div>
+                    </div>
+                    <h2>Deskripsi / Ringkasan Buku</h2>
+                    <p>{{ $item['description'] }}</p>
+                </div>
+            </article>
+        </div>
+    </section>
+@else
+    <section class="section container">
+        <h1>Buku tidak ditemukan</h1>
+        <a class="text-link icon-link" href="{{ route('library.index') }}">Kembali ke katalog <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </section>
+@endif
 @endsection

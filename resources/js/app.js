@@ -189,18 +189,23 @@ if (carousel) {
     let lastTime = 0;
     let cycleWidth = 0;
 
-    originals.forEach((node) => {
-        const clone = node.cloneNode(true);
-        clone.setAttribute('aria-hidden', 'true');
-        track.append(clone);
-    });
-
     const measure = () => {
         const firstClone = track.children[originals.length];
         cycleWidth = firstClone ? firstClone.offsetLeft : 0;
     };
-    measure();
-    window.addEventListener('resize', measure);
+
+    if (originals.length <= 1) {
+        carousel.classList.add('is-static');
+    } else {
+        originals.forEach((node) => {
+            const clone = node.cloneNode(true);
+            clone.setAttribute('aria-hidden', 'true');
+            if (clone instanceof HTMLElement) clone.tabIndex = -1;
+            track.append(clone);
+        });
+        measure();
+        window.addEventListener('resize', measure);
+    }
 
     if (motionAllowed && originals.length > 1) {
         const animate = (time) => {
@@ -208,8 +213,8 @@ if (carousel) {
             const delta = time - lastTime;
             lastTime = time;
 
-            if (!paused && cycleWidth > viewport.clientWidth) {
-                offset = (offset + delta * 0.035) % cycleWidth;
+            if (!paused && cycleWidth > 0 && cycleWidth > viewport.clientWidth) {
+                offset = (offset + delta * 0.03) % cycleWidth;
                 track.style.transform = `translate3d(${-offset}px,0,0)`;
             }
 
@@ -226,12 +231,12 @@ if (carousel) {
     carousel.addEventListener('pointerdown', () => { paused = true; });
     carousel.addEventListener('pointerup', () => window.setTimeout(resume, 900));
     query('[data-partner-prev]', carousel)?.addEventListener('click', () => {
-        if (!cycleWidth) return;
+        if (!cycleWidth || originals.length <= 1) return;
         offset = (offset - 230 + cycleWidth) % cycleWidth;
         track.style.transform = `translate3d(${-offset}px,0,0)`;
     });
     query('[data-partner-next]', carousel)?.addEventListener('click', () => {
-        if (!cycleWidth) return;
+        if (!cycleWidth || originals.length <= 1) return;
         offset = (offset + 230) % cycleWidth;
         track.style.transform = `translate3d(${-offset}px,0,0)`;
     });

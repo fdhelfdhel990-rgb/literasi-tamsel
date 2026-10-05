@@ -1,1 +1,35 @@
-@extends('layouts.public') @section('title','Kontak') @section('content')<section class="page-intro"><div class="container"><span class="eyebrow">KONTAK KAMI</span><h1>Terhubung dengan Komunitas</h1><p>Informasi kontak resmi sedang diselaraskan bersama pengurus komunitas. Untuk sementara, halaman ini menampilkan struktur kontak yang siap diisi melalui pengelolaan konten.</p></div></section><section class="section"><div class="container contact-grid"><article><span>✉</span><h2>Email komunitas</h2><p>Menunggu konfirmasi pengurus</p></article><article><span>☏</span><h2>Nomor kontak / WhatsApp</h2><p>Menunggu konfirmasi pengurus</p></article><article><span>⌖</span><h2>Lokasi komunitas</h2><p>Tambun Selatan, Kabupaten Bekasi, Jawa Barat</p></article><article><span>↗</span><h2>Media sosial</h2><p>Instagram dan kanal resmi akan ditambahkan setelah tautan diverifikasi.</p></article></div></section>@endsection
+@extends('layouts.public')
+@section('title', 'Kontak')
+@section('content')
+<section class="page-intro">
+    <div class="container">
+        <span class="eyebrow">KONTAK KAMI</span>
+        <h1>Terhubung dengan Komunitas</h1>
+        <p>Informasi kontak resmi sedang diselaraskan bersama pengurus komunitas. Untuk sementara, halaman ini menampilkan struktur kontak yang siap diisi melalui pengelolaan konten.</p>
+    </div>
+</section>
+<section class="section">
+    <div class="container contact-grid">
+        <article>
+            <span class="contact-symbol" aria-hidden="true">Email</span>
+            <h2>Email komunitas</h2>
+            <p>Menunggu konfirmasi pengurus</p>
+        </article>
+        <article>
+            <span class="contact-symbol" aria-hidden="true">WA</span>
+            <h2>Nomor kontak / WhatsApp</h2>
+            <p>Menunggu konfirmasi pengurus</p>
+        </article>
+        <article>
+            <span class="contact-symbol" aria-hidden="true">Lokasi</span>
+            <h2>Lokasi komunitas</h2>
+            <p>Tambun Selatan, Kabupaten Bekasi, Jawa Barat</p>
+        </article>
+        <article>
+            <span class="contact-symbol" aria-hidden="true">Sosial</span>
+            <h2>Media sosial</h2>
+            <p>Instagram dan kanal resmi akan ditambahkan setelah tautan diverifikasi.</p>
+        </article>
+    </div>
+</section>
+@endsection

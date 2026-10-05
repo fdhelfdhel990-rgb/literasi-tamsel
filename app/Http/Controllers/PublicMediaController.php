@@ -16,9 +16,13 @@ class PublicMediaController extends Controller
         $disk = Storage::disk(config('filesystems.default'));
 
         try {
+            if (! $disk->exists($path)) {
+                abort(404);
+            }
+
             $stream = $disk->readStream($path);
-        } catch (\Illuminate\Contracts\Filesystem\FileNotFoundException $exception) {
-            abort(404);
+        } catch (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $exception) {
+            throw $exception;
         } catch (Throwable $exception) {
             report($exception);
             abort(502, 'Media sementara tidak dapat diakses.');

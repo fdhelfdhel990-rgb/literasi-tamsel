@@ -14,6 +14,8 @@ return Application::configure(basePath: dirname(__DIR__))
         },
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Render terminates HTTPS at its reverse proxy; honor forwarded scheme.
+        $middleware->trustProxies(at: '*');
         $middleware->alias(['admin.active' => EnsureAdminActive::class]);
         $middleware->redirectGuestsTo(fn () => route('admin.login'));
     })

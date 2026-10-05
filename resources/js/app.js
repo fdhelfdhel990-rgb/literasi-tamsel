@@ -250,21 +250,29 @@ relatedSearch?.addEventListener('input', () => {
 });
 
 queryAll('[data-image-input]').forEach((input) => input.addEventListener('change', () => {
+    // Scope the preview to this form in case more than one upload exists.
+    const form = input.closest('form') || document;
+    const preview = query('[data-image-preview]', form);
+    const wrapper = preview?.closest('.image-preview-wrap');
     const file = input.files?.[0];
-    const preview = query('[data-image-preview]');
-    if (!file || !preview) return;
-    if (!file.type.startsWith('image/')) {
+
+    if (!preview || !wrapper || !file) return;
+
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
         input.value = '';
-        toast('Pilih file gambar yang valid.');
+        toast('Pilih gambar JPG, PNG, atau WebP.');
         return;
     }
+
     if (preview.dataset.objectUrl) URL.revokeObjectURL(preview.dataset.objectUrl);
+
     const objectUrl = URL.createObjectURL(file);
     preview.dataset.objectUrl = objectUrl;
+    preview.onload = () => URL.revokeObjectURL(objectUrl);
     preview.src = objectUrl;
     preview.hidden = false;
+    wrapper.hidden = false;
 }));
-
 const roleSelect = query('#adminRole');
 const permissionFields = query('[data-permission-fields]');
 const syncPermissionFields = () => {

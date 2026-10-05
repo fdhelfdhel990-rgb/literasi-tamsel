@@ -188,23 +188,42 @@ if (carousel) {
     let offset = 0;
     let lastTime = 0;
     let cycleWidth = 0;
+    let frame = null;
+    const speed = 0.025;
 
-    const measure = () => {
-        const firstClone = track.children[originals.length];
-        cycleWidth = firstClone ? firstClone.offsetLeft : 0;
+    const setCloneTabOrder = (clone) => {
+        if (!(clone instanceof HTMLElement)) return;
+        clone.tabIndex = -1;
+        queryAll('a, button, input, select, textarea, [tabindex]', clone).forEach((element) => {
+            element.setAttribute('tabindex', '-1');
+        });
+    };
+
+    const rebuild = () => {
+        queryAll('[data-partner-clone]', track).forEach((node) => node.remove());
+        track.style.transform = 'translate3d(0,0,0)';
+        offset = 0;
+        cycleWidth = track.scrollWidth;
+
+        if (originals.length <= 1) return;
+
+        const minimumTrackWidth = Math.max(viewport.clientWidth * 2, viewport.clientWidth + cycleWidth);
+        while (track.scrollWidth < minimumTrackWidth) {
+            originals.forEach((node) => {
+                const clone = node.cloneNode(true);
+                clone.dataset.partnerClone = 'true';
+                clone.setAttribute('aria-hidden', 'true');
+                setCloneTabOrder(clone);
+                track.append(clone);
+            });
+        }
     };
 
     if (originals.length <= 1) {
         carousel.classList.add('is-static');
     } else {
-        originals.forEach((node) => {
-            const clone = node.cloneNode(true);
-            clone.setAttribute('aria-hidden', 'true');
-            if (clone instanceof HTMLElement) clone.tabIndex = -1;
-            track.append(clone);
-        });
-        measure();
-        window.addEventListener('resize', measure);
+        rebuild();
+        window.addEventListener('resize', rebuild);
     }
 
     if (motionAllowed && originals.length > 1) {
@@ -213,14 +232,14 @@ if (carousel) {
             const delta = time - lastTime;
             lastTime = time;
 
-            if (!paused && cycleWidth > 0 && cycleWidth > viewport.clientWidth) {
-                offset = (offset + delta * 0.03) % cycleWidth;
+            if (!paused && cycleWidth > 0) {
+                offset = (offset + delta * speed) % cycleWidth;
                 track.style.transform = `translate3d(${-offset}px,0,0)`;
             }
 
-            requestAnimationFrame(animate);
+            frame = requestAnimationFrame(animate);
         };
-        requestAnimationFrame(animate);
+        frame = requestAnimationFrame(animate);
     }
 
     const resume = () => { paused = false; };
@@ -239,6 +258,10 @@ if (carousel) {
         if (!cycleWidth || originals.length <= 1) return;
         offset = (offset + 230) % cycleWidth;
         track.style.transform = `translate3d(${-offset}px,0,0)`;
+    });
+
+    window.addEventListener('beforeunload', () => {
+        if (frame) cancelAnimationFrame(frame);
     });
 }
 
